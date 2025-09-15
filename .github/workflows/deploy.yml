@@ -31,5 +31,5 @@ jobs:
             # If your project uses Node.js
             if [ -f "package.json" ]; then
               npm install
-              pm2 restart hello.js || pm2 start server.js --name jspractice
+              pm2 restart server.js || pm2 start server.js --name jspractice
             fi
