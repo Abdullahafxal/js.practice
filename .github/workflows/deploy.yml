@@ -11,17 +11,4 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-  cd /home/ubuntu/js.practice
-  git reset --hard HEAD
-  git pull origin main
-  npm ci           # or npm install
-  pm2 restart js-practice
+        uses: actions/checkout@v4
