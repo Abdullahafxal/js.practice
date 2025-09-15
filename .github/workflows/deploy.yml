@@ -11,25 +11,17 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@master
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            if [ ! -d "js.practice" ]; then
-              git clone https://github.com/Abdullahafxal/js.practice.git
-            else
-              cd js.practice && git pull origin main
-            fi
-
-            cd js.practice
-
-            # If your project uses Node.js
-            if [ -f "package.json" ]; then
-              npm install
-              pm2 restart server.js || pm2 start server.js --name jspractice
-            fi
+  cd /home/ubuntu/js.practice
+  git reset --hard HEAD
+  git pull origin main
+  npm ci           # or npm install
+  pm2 restart js-practice
