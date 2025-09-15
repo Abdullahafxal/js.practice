@@ -1,17 +1,13 @@
-  GNU nano 7.2                                                               server.js                                                                        
-// server.js
-
-const http = require('http');
-
+const express = require('express');
+const app = express();
 const PORT = 3000;
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello world,from EC2 Instance!');
+// Basic route
+app.get('/', (req, res) => {
+  res.send('Hello World from js-practice app!');
 });
 
-server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
 });
 
