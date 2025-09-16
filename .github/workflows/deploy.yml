@@ -22,7 +22,7 @@ jobs:
           debug: true
           script: |  
             echo "Connected successfully"
-            cd /home/ubuntu/js.practice/server.js || exit 1
+            cd /home/ubuntu/js.practice  || exit 1
             git pull origin main
             npm ci
             pm2 restart all  
