@@ -16,5 +16,16 @@ jobs:
       - name: Deploy to EC2
         uses: easingthemes/ssh-deploy@v2.1.5
         with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+          remote-user: ubuntu
+          server-ip: ${{ secrets.EC2_SERVER_IP }}
+          remote-path: /home/ubuntu/js.practice
+          pre-deploy-command: |
+            cd /home/ubuntu/js.practice
+            git pull origin main || true
+          post-deploy-command: |
+            cd /home/ubuntu/js.practice
+            npm install
+            pm2 restart all || pm2 start app.js --name "js.practice"
         
           
