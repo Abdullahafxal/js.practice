@@ -27,7 +27,7 @@ jobs:
           remote-user: ${{ secrets.EC2_USER }}
           server-ip: ${{ secrets.EC2_HOST }}
           remote-path: /home/ubuntu/js.practice  
-          local-path: /home/hajra/projects/js.practice
+          local-path: ./
 
       - name: Run post-deploy script on EC2
         uses: appleboy/ssh-action@master
