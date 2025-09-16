@@ -20,6 +20,12 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+
       
-    
+    script: |
+            echo "successful"
+            cd /home/ubuntu/js.practice
+            git pull origin main
+            npm install
+            pm2 restart 0
         
