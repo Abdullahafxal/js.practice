@@ -10,28 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Debug SSH manually
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        EC2_USER: ${{ secrets.EC2_USER }}
-        EC2_HOST: ${{ secrets.EC2_HOST }}
-      run: |
-        mkdir -p ~/.ssh
-        echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $EC2_USER@$EC2_HOST whoami
+      - name: Debug environment variables
+        run: |
+          echo "EC2_USER=$EC2_USER"
+          echo "EC2_HOST=$EC2_HOST"
+        env:
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
 
-    - name: Deploy with ssh-deploy action
-      uses: easingthemes/ssh-deploy@main
-      with:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        REMOTE_HOST: ${{ secrets.EC2_HOST }}
-        REMOTE_USER: ${{ secrets.EC2_USER }}
-        TARGET: /home/ubuntu/js.practice
-        SOURCE: ./
-        REMOTE_PORT: 22
-        ARGS: -rlgoDzvc -i
-        SSH_CMD_ARGS: -o StrictHostKeyChecking=no
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Test SSH connection
+        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} whoami
+
+      - name: Deploy using SSH Deploy action
+        uses: easingthemes/ssh-deploy@main
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.EC2_HOST }}
+          REMOTE_USER: ${{ secrets.EC2_USER }}
+          REMOTE_PORT: 22
+          TARGET: /home/ubuntu/js.practice
+          SOURCE: ./
+          ARGS: -rlgoDzvc -i
+          SSH_CMD_ARGS: -o StrictHostKeyChecking=no
