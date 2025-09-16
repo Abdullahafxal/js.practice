@@ -16,9 +16,10 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ env.EC2_HOST }}
-          username: ubuntu
-          key: ${{ env.EC2_SSH_KEY }}
+          host: ${{ env.Remote_Host }}
+          username: linuxuserver.io
+          key: ${{ env.Private_Key }}
+          port: 22
           script: |
             cd /home/hajra/projects/js.practice  || exit 1
             git pull origin main
