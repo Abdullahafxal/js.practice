@@ -12,14 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.6
+    -- name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          host: ${{ secrets.EC2_Host }}
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          debug: true
+           node-version: '16'
+
+      - name: Install dependencies
+        run: npm install      
+
+      - name: Run tests
+        run: npm test
           script: |  
             echo "Connected successfully"
             cd /home/hajra/projects/js.practice  || exit 1
