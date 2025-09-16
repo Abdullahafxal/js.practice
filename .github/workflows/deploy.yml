@@ -23,11 +23,14 @@ jobs:
       - name: Deploy via SSH to EC2
         uses: easingthemes/ssh-deploy@main
         with:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          REMOTE_USER: ${{ secrets.EC2_USER }}
-          REMOTE_HOST: ${{ secrets.EC2_HOST }}
-          TARGET: /home/ubuntu/js.practice
-          SOURCE: ./
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        REMOTE_USER: ${{ secrets.EC2_USER }}
+        REMOTE_HOST: ${{ secrets.EC2_HOST }}
+        TARGET: /home/ubuntu/js.practice
+        SOURCE: ./
+        REMOTE_PORT: 22
+        ARGS: -rlgoDzvc -i
+        SSH_CMD_ARGS: -o StrictHostKeyChecking=no
 
       - name: Run post-deploy script on EC2
         uses: appleboy/ssh-action@master
