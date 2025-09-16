@@ -13,32 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup SSH key
+      - name: Show current directory and files
         run: |
-          mkdir -p ~/.ssh
-          echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $EC2_HOST >> ~/.ssh/known_hosts
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
+          pwd
+          ls -la
 
-      - name: Deploy files to EC2 via rsync
+      - name: Debug environment variables
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ $EC2_USER@$EC2_HOST:/home/$EC2_USER/app/
-        env:
-          EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
+          echo "EC2_USER=${{ secrets.EC2_USER }}"
+          echo "EC2_HOST=${{ secrets.EC2_HOST }}"
 
-      - name: Run deployment commands on EC2
-        run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
-            cd /home/$EC2_USER/app
-            # example command: install dependencies
-            npm install
-            # example command: restart your app (replace with your actual commands)
-            pm2 restart app || pm2 start app.js --name app
-          EOF
-        env:
-          EC2_USER: ${{ secrets.EC2_USER }}
-          EC2_HOST: ${{ secrets.EC2_HOST }}
+      - name: Run a simple command
+        run: echo "Deploy started"
