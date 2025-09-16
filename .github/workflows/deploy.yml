@@ -20,7 +20,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |  
-            echo "successful"
             cd /home/hajra/projects/js.practice  || exit 1
             git pull origin main
             npm ci
