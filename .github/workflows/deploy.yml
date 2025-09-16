@@ -12,16 +12,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Show current directory and files
-        run: |
-          pwd
-          ls -la
-
+        
       - name: Debug environment variables
         run: |
           echo "EC2_USER=${{ secrets.EC2_USER }}"
           echo "EC2_HOST=${{ secrets.EC2_HOST }}"
 
-      - name: Run a simple command
-        run: echo "Deploy started"
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Test SSH connection
+        run: ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} whoami
+
+      - name: Deploy with rsync
+        run: |
+          rsync -avz -e "ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no" ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USER }}/js.practice
