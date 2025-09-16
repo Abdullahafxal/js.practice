@@ -16,9 +16,9 @@ jobs:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ env.Remote_Host }}
-          username: linuxuserver.io
-          key: ${{ env.Private_Key }}
+          host: ${{ secrets.Remote_Host }}
+          username: ubuntu
+          key: ${{ secrets.Private_Key }}
           port: 22
           script: |
             cd /home/hajra/projects/js.practice  || exit 1
