@@ -16,13 +16,34 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+        node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests
-        run: npm test
+      - name:Run tests
+        run:npm test
+
+    deploy:
+    needs: built-and-test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Deploy to EC2 server via SSH
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ${{ secrets.EC2_USER }}
+        key: ${{ secrets.EC2_KEY }}
+        port: 22
+        script: |
+          cd /path/to/your/app
+          git pull origin main
+          npm install
+          pm2 restart all
+      
+
+      -
 
          
         
