@@ -4,7 +4,7 @@ const PORT = 3000;
 
 // Basic route
 app.get('/', (req, res) => {
-  res.send('Hello');
+  res.send('Hello World!');
 });
 
 app.listen(PORT, '0.0.0.0', () => {
